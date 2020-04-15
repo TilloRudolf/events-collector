@@ -11,7 +11,11 @@ import java.util.List;
 public class EventsController {
 
     @Autowired
-    private EventsRepository repository;
+    private final EventsRepository repository;
+
+    public EventsController(EventsRepository repository) {
+        this.repository = repository;
+    }
 
     @GetMapping(value = "/minute")
     @ResponseBody
