@@ -19,4 +19,8 @@ public class Event {
     public Long getTimestampMillis() {
         return timestampMillis;
     }
+
+    public String getName() {
+        return name;
+    }
 }

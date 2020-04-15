@@ -42,8 +42,8 @@ public class EventsController {
 
     @RequestMapping(value = "/event", method = RequestMethod.POST)
     @ResponseBody
-    public String event(@RequestBody Event event) {
+    public EventsControllerResponse event(@RequestBody Event event) {
         repository.putEvent(event);
-        return "OK";
+        return new EventsControllerResponse("SUCCESS", event.getName());
     }
 }
