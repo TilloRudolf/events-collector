@@ -16,7 +16,7 @@ public class Event {
         this.timestampMillis = timestampMillis;
     }
 
-    public Long getTimestamp() {
+    public Long getTimestampMillis() {
         return timestampMillis;
     }
 }

@@ -2,8 +2,6 @@ package com.back.eventscollector.controller;
 
 import com.back.eventscollector.model.Event;
 import com.back.eventscollector.repository.EventsRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,26 +15,20 @@ public class EventsController {
 
     @GetMapping(value = "/minute")
     @ResponseBody
-    public String eventsForLastMinute() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        List<Event> events = repository.forMinute();
-        return mapper.writeValueAsString(events);
+    public List<Event> eventsForLastMinute() {
+        return repository.forMinute();
     }
 
     @GetMapping(value = "/hour")
     @ResponseBody
-    public String eventsForLastHour() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        List<Event> events = repository.forHour();
-        return mapper.writeValueAsString(events);
+    public List<Event> eventsForLastHour() {
+        return repository.forHour();
     }
 
     @GetMapping(value = "/day")
     @ResponseBody
-    public String eventsForLastDay() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        List<Event> events = repository.forDay();
-        return mapper.writeValueAsString(events);
+    public List<Event> eventsForLastDay() {
+        return repository.forDay();
     }
 
     @PostMapping(value = "/event")
