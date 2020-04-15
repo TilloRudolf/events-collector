@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Event {
-    final String name;
-    final String description;
-    final Long timestampMillis;
+    private final String name;
+    private final String description;
+    private final Long timestampMillis;
 
     @JsonCreator
     public Event(
