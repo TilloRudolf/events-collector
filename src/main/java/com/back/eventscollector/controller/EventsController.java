@@ -1,6 +1,7 @@
 package com.back.eventscollector.controller;
 
 import com.back.eventscollector.model.Event;
+import com.back.eventscollector.model.EventsResponse;
 import com.back.eventscollector.repository.EventsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,20 +21,23 @@ public class EventsController {
 
     @RequestMapping(value = "/minute", method = RequestMethod.GET)
     @ResponseBody
-    public List<Event> eventsForLastMinute() {
-        return repository.forMinute();
+    public EventsResponse eventsForLastMinute() {
+        List<Event> events = repository.forMinute();
+        return new EventsResponse(events);
     }
 
     @RequestMapping(value = "/hour", method = RequestMethod.GET)
     @ResponseBody
-    public List<Event> eventsForLastHour() {
-        return repository.forHour();
+    public EventsResponse eventsForLastHour() {
+        List<Event> events = repository.forHour();
+        return new EventsResponse(events);
     }
 
     @RequestMapping(value = "/day", method = RequestMethod.GET)
     @ResponseBody
-    public List<Event> eventsForLastDay() {
-        return repository.forDay();
+    public EventsResponse eventsForLastDay() {
+        List<Event> events = repository.forDay();
+        return new EventsResponse(events);
     }
 
     @RequestMapping(value = "/event", method = RequestMethod.POST)
