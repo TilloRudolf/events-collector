@@ -1,8 +1,8 @@
 package com.back.eventscollector.model;
 
 public class EventItem {
-    final Event event;
-    final Long eventId;
+    private final Event event;
+    private final Long eventId;
 
     public EventItem(Event event, Long eventId) {
         this.event = event;

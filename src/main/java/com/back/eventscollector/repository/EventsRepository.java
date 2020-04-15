@@ -15,9 +15,9 @@ public class EventsRepository {
     Map<Long, EventItem> map = new LinkedHashMap<>();
     AtomicLong nextEventId = new AtomicLong(0);
 
-    private final static Long MINUTE_MILLIS = 60 * 1000L;
-    private final static Long HOUR_MILLIS = 60 * 60 * 1000L;
-    private final static Long DAY_MILLIS = 24 * 60 * 60 * 1000L;
+    private static final Long MINUTE_MILLIS = 60 * 1000L;
+    private static final Long HOUR_MILLIS = 60 * 60 * 1000L;
+    private static final Long DAY_MILLIS = 24 * 60 * 60 * 1000L;
 
     public void putEvent(Event event) {
         EventItem item = new EventItem(event, nextEventId.incrementAndGet());
