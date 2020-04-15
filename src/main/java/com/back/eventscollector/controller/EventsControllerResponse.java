@@ -1,16 +1,27 @@
 package com.back.eventscollector.controller;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class EventsControllerResponse {
-    @JsonSerialize
     private final String msg;
-    @JsonSerialize
     private final String eventName;
 
-    public EventsControllerResponse(String msg, String eventName) {
+    @JsonCreator
+    public EventsControllerResponse(
+            @JsonProperty("msg") String msg,
+            @JsonProperty("eventName") String eventName
+    ) {
         this.msg = msg;
         this.eventName = eventName;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public String getEventName() {
+        return eventName;
     }
 }

@@ -1,16 +1,18 @@
 package com.back.eventscollector.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Event {
-    @JsonSerialize
     final String name;
-    @JsonSerialize
     final String description;
-    @JsonSerialize
     final Long timestampMillis;
 
-    public Event(String name, String description, Long timestampMillis) {
+    @JsonCreator
+    public Event(
+            @JsonProperty("name") String name,
+            @JsonProperty("description") String description,
+            @JsonProperty("timestampMillis") Long timestampMillis) {
         this.name = name;
         this.description = description;
         this.timestampMillis = timestampMillis;
@@ -22,5 +24,9 @@ public class Event {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
