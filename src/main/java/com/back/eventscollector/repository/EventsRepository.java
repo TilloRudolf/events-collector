@@ -2,6 +2,7 @@ package com.back.eventscollector.repository;
 
 import com.back.eventscollector.model.Event;
 import com.back.eventscollector.model.EventItem;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Component("eventRepository")
 public class EventsRepository {
     Map<Long, EventItem> map = new LinkedHashMap<>();
     AtomicLong nextEventId = new AtomicLong(0);

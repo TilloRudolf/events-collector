@@ -4,6 +4,7 @@ import com.back.eventscollector.model.Event;
 import com.back.eventscollector.repository.EventsRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,7 +12,8 @@ import java.util.List;
 @RestController
 public class EventsController {
 
-    private final EventsRepository repository = new EventsRepository();
+    @Autowired
+    private EventsRepository repository;
 
     @GetMapping(value = "/minute")
     @ResponseBody
