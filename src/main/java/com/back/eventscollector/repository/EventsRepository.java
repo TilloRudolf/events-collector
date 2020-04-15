@@ -45,7 +45,7 @@ public class EventsRepository {
 
         map.forEach((id, item) -> {
             Long dayBefore = System.currentTimeMillis() - DAY_MILLIS;
-            Long eventTimestamp = item.getEvent().getTimestamp();
+            Long eventTimestamp = item.getEvent().getTimestampMillis();
 
             if (eventTimestamp < dayBefore) {
                 idsForRemove.add(id);
