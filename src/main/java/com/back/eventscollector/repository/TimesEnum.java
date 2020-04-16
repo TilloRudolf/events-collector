@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 public enum TimesEnum {
     MINUTE("minute", TimeUnitEnum.MINUTE_MILLIS),
     HOUR("hour", TimeUnitEnum.HOUR_MILLIS),
-    DAY("day", TimeUnitEnum.DAY_MILLIS);
+    DAY("24hour", TimeUnitEnum.DAY_MILLIS);
 
     private final String value;
     private final TimeUnitEnum timeRange;
