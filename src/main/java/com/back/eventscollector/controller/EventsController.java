@@ -4,44 +4,33 @@ import com.back.eventscollector.model.Event;
 import com.back.eventscollector.model.EventsResponse;
 import com.back.eventscollector.repository.EventsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/events")
 public class EventsController {
 
-    @Autowired
     private final EventsRepository repository;
 
+    @Autowired
     public EventsController(EventsRepository repository) {
         this.repository = repository;
     }
 
-    @RequestMapping(value = "/minute", method = RequestMethod.GET)
-    public EventsResponse eventsForLastMinute() {
-        List<Event> events = repository.forMinute();
-        return new EventsResponse(events);
-    }
-
-    @RequestMapping(value = "/hour", method = RequestMethod.GET)
-    public EventsResponse eventsForLastHour() {
-        List<Event> events = repository.forHour();
-        return new EventsResponse(events);
-    }
-
-    @RequestMapping(value = "/day", method = RequestMethod.GET)
-    public EventsResponse eventsForLastDay() {
-        List<Event> events = repository.forDay();
-        return new EventsResponse(events);
+    @RequestMapping(value = "/period", method = RequestMethod.GET)
+    public EventsResponse forPeriod(@RequestParam String range) {
+        return repository.forRange(range);
     }
 
     @RequestMapping(value = "/event", method = RequestMethod.POST)
-    public EventsControllerResponse event(@RequestBody Event event) {
+    public ResponseEntity<String> event(@Valid @RequestBody Event event) {
         repository.putEvent(event);
-        return new EventsControllerResponse("SUCCESS", event.getName());
+        return new ResponseEntity<>(
+                String.format("%s%s%s", "event name: ", event.getName(), " saved"),
+                HttpStatus.OK);
     }
 }

@@ -15,37 +15,42 @@ class EventsRepositoryTest {
 
     @BeforeEach
     public void initRepository() {
-        repository = new EventsRepository();
+        repository = new EventsRepository(new TimeRepository());
 
         Long currentMillis = System.currentTimeMillis();
 
-        Event event1 = new Event("hello", "1", minusSeconds(currentMillis, 30));
-        Event event2 = new Event("hello", "2", minusMinutes(currentMillis, 10));
-        Event event3 = new Event("hello", "3", minusHours(currentMillis, 10));
-        Event event4 = new Event("hello", "4", minusHours(currentMillis, 25));
+        Event event1 = new Event("hello", "for minute", minusSeconds(currentMillis, 30));
+        Event event2 = new Event("hello", "for hour", minusMinutes(currentMillis, 10));
+        Event event3 = new Event("hello", "for day", minusHours(currentMillis, 10));
+        Event event4 = new Event("hello", "very old", minusHours(currentMillis, 25));
 
         repository.putEvent(event1);
         repository.putEvent(event2);
         repository.putEvent(event3);
         repository.putEvent(event4);
+
+        repository.recalculate();
     }
 
     @Test
     public void eventsForMinute() {
-       List<Event> forMinute =  repository.forMinute();
-       assertEquals(forMinute.size(), 1);
+        List<Event> forMinute = repository.forRange("minute").getEvents();
+        assertEquals(forMinute.size(), 1);
+        assertEquals(forMinute.get(0).getDescription(), "for minute");
     }
 
     @Test
     public void eventsForHour() {
-       List<Event> forMinute =  repository.forHour();
-       assertEquals(forMinute.size(), 2);
+        List<Event> forHour = repository.forRange("hour").getEvents();
+        assertEquals(forHour.size(), 2);
+        assertEquals(forHour.get(0).getDescription(), "for minute");
     }
 
     @Test
     public void eventsForDay() {
-       List<Event> forMinute =  repository.forDay();
-       assertEquals(forMinute.size(), 3);
+        List<Event> forDay = repository.forRange("day").getEvents();
+        assertEquals(forDay.size(), 3);
+        assertEquals(forDay.get(0).getDescription(), "for minute");
     }
 
     private Long minusSeconds(Long currentMillis, int seconds) {
