@@ -15,6 +15,7 @@ public class EventsResponse {
         this.events = events;
     }
 
+    @JsonProperty("events")
     public List<Event> getEvents() {
         return events;
     }

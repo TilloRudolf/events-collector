@@ -29,15 +29,18 @@ public class Event {
         this.timestampMillisUTC = timestampMillisUTC;
     }
 
-    public Long getTimestampMillisUTC() {
-        return timestampMillisUTC;
-    }
-
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
 
+    @JsonProperty("description")
     public String getDescription() {
         return description;
+    }
+
+    @JsonProperty("timestampMillisUTC")
+    public Long getTimestampMillisUTC() {
+        return timestampMillisUTC;
     }
 }
