@@ -31,12 +31,13 @@ public class EventsController {
         this.repository = repository;
     }
 
-    @Operation(summary = "Return events", description = "return by one of [minute, hour, 24hour]", tags = {"event"})
+    @Operation(summary = "Return events", description = "return by one of [minute, hour, 24hours]", tags = {"event"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(
                     array = @ArraySchema(schema = @Schema(implementation = Event.class))
             )),
-            @ApiResponse(responseCode = "405", description = "typo in parameter \"range\", correct values [minute, hour, 24hour]. For example: ?range=hour") //TODO add content in each ApiResponse
+            @ApiResponse(responseCode = "405", description = "typo in parameter \"range\", correct values [minute, hour, 24hours]. For example: ?range=hour"),
+            @ApiResponse(responseCode = "400", description = "parameter \"range\" is missing, correct values [minute, hour, 24hours]. For example: ?range=hour")
     })
     @RequestMapping(value = "/period", method = RequestMethod.GET)
     public ResponseEntity<EventsResponse> forPeriod(@RequestParam String range) {

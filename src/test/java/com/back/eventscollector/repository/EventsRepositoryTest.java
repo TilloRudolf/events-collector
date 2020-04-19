@@ -21,7 +21,7 @@ class EventsRepositoryTest {
 
         Event event1 = new Event("hello", "for last minute", minusSeconds(currentMillis, 30));
         Event event2 = new Event("hello", "for last hour", minusMinutes(currentMillis, 10));
-        Event event3 = new Event("hello", "for last 24 hour", minusHours(currentMillis, 10));
+        Event event3 = new Event("hello", "for last 24 hours", minusHours(currentMillis, 10));
         Event event4 = new Event("hello", "very old", minusHours(currentMillis, 25));
 
         repository.putEvent(event1);
@@ -47,10 +47,10 @@ class EventsRepositoryTest {
     }
 
     @Test
-    public void eventsForLast24Hour() {
-        List<Event> forLast24Hour = repository.forRange("24hour").getEvents();
-        assertEquals(forLast24Hour.size(), 3);
-        assertEquals(forLast24Hour.get(0).getDescription(), "for last minute");
+    public void eventsForLast24Hours() {
+        List<Event> forLast24Hours = repository.forRange("24hours").getEvents();
+        assertEquals(forLast24Hours.size(), 3);
+        assertEquals(forLast24Hours.get(0).getDescription(), "for last minute");
     }
 
     private Long minusSeconds(Long currentMillis, int seconds) {
