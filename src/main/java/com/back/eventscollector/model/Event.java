@@ -5,8 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
-public class Event {
+public class Event implements Serializable {
 
     @NotNull
     @Size(min = 1, max = 50)

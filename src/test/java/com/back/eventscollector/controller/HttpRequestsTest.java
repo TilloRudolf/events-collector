@@ -1,7 +1,9 @@
 package com.back.eventscollector.controller;
 
+import com.back.eventscollector.exception.ExceptionSerialize;
 import com.back.eventscollector.model.Event;
-import com.back.eventscollector.model.EventsResponse;
+import com.back.eventscollector.model.EventsCount;
+import com.back.eventscollector.model.HandleEventResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,11 +11,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
+import static com.back.eventscollector.configs.HazelcastProperties.MINUTE_COLLECTION;
+import static com.back.eventscollector.configs.HazelcastProperties.TOO_OLD;
 import static org.assertj.core.api.Assertions.assertThat;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HttpRequestsTest {
@@ -25,42 +28,57 @@ public class HttpRequestsTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void getShouldReturnOK() {
-        ResponseEntity<EventsResponse> forEntity = restTemplate.getForEntity("http://localhost:" + port + "/events/period?range=minute", EventsResponse.class);
+    public void handleEventSuccessful() {
+        ResponseEntity<HandleEventResponse> forEntity = restTemplate.postForEntity(
+                "http://localhost:" + port + "/events",
+                new Event("name", "description", System.currentTimeMillis()),
+                HandleEventResponse.class);
         assertThat(forEntity);
         assertThat(forEntity.getStatusCodeValue()).isEqualTo(200);
-        assertThat(Objects.requireNonNull(forEntity.getBody()).getEvents()).isEmpty();
+        assertThat(Objects.requireNonNull(Objects.requireNonNull(forEntity.getBody()).getResult())).isEqualTo(MINUTE_COLLECTION);
     }
 
     @Test
-    public void getShouldReturnMETHOD_NOT_ALLOWED() {
-        ResponseEntity<EventsResponse> forEntity = restTemplate.getForEntity("http://localhost:" + port + "/events/period?range=m", EventsResponse.class);
-        assertThat(forEntity);
-        assertThat(forEntity.getStatusCodeValue()).isEqualTo(405);
-    }
-
-    @Test
-    public void getShouldReturnBAD_REQUEST() {
-        ResponseEntity<EventsResponse> forEntity = restTemplate.getForEntity("http://localhost:" + port + "/events/period", EventsResponse.class);
+    public void handleEventFail() {
+        ResponseEntity<ExceptionSerialize> forEntity = restTemplate.postForEntity(
+                "http://localhost:" + port + "/events",
+                new Event("name", "description", System.currentTimeMillis() + (60 * 1000)),
+                ExceptionSerialize.class);
         assertThat(forEntity);
         assertThat(forEntity.getStatusCodeValue()).isEqualTo(400);
+        assertThat(Objects.requireNonNull(forEntity.getBody()).getCode()).isEqualTo(400);
+        assertThat(Objects.requireNonNull(Objects.requireNonNull(forEntity.getBody()).getMessage())).contains("You should wait some time");
     }
 
     @Test
-    public void addEvent() {
-        restTemplate.put("http://localhost:" + port + "/events/event", new Event("name", "description", System.currentTimeMillis()));
-
-        List<String> timeRanges = Arrays.asList("minute", "hour", "24hours");
-        timeRanges.forEach(this::getEventsForTimePeriod);
-    }
-
-    private void getEventsForTimePeriod(String timeRange) {
-        ResponseEntity<EventsResponse> forEntity = restTemplate.getForEntity("http://localhost:" + port + "/events/period?range=" + timeRange, EventsResponse.class);
+    public void handleTooOldEvent() {
+        ResponseEntity<HandleEventResponse> forEntity = restTemplate.postForEntity(
+                "http://localhost:" + port + "/events",
+                new Event("name", "description", System.currentTimeMillis() - (24 * 60 * 60 * 1000)),
+                HandleEventResponse.class);
         assertThat(forEntity);
         assertThat(forEntity.getStatusCodeValue()).isEqualTo(200);
-        assertThat(Objects.requireNonNull(forEntity.getBody()).getEvents()).isNotEmpty();
-        assertThat(Objects.requireNonNull(forEntity.getBody()).getEvents().get(0).getName()).isEqualTo("name");
-        assertThat(Objects.requireNonNull(forEntity.getBody()).getEvents().get(0).getDescription()).isEqualTo("description");
-        assertThat(Objects.requireNonNull(forEntity.getBody()).getEvents().get(0).getTimestampMillisUTC()).isNotNull();
+        assertThat(Objects.requireNonNull(Objects.requireNonNull(forEntity.getBody()).getResult())).isEqualTo(TOO_OLD);
+    }
+
+    @Test
+    public void getMinuteShouldReturnOK() {
+        ResponseEntity<EventsCount> forEntity = restTemplate.getForEntity("http://localhost:" + port + "/events/minute", EventsCount.class);
+        assertThat(forEntity);
+        assertThat(forEntity.getStatusCodeValue()).isEqualTo(200);
+    }
+
+    @Test
+    public void getHourShouldReturnOK() {
+        ResponseEntity<EventsCount> forEntity = restTemplate.getForEntity("http://localhost:" + port + "/events/hour", EventsCount.class);
+        assertThat(forEntity);
+        assertThat(forEntity.getStatusCodeValue()).isEqualTo(200);
+    }
+
+    @Test
+    public void get24HoursShouldReturnOK() {
+        ResponseEntity<EventsCount> forEntity = restTemplate.getForEntity("http://localhost:" + port + "/events/24hours", EventsCount.class);
+        assertThat(forEntity);
+        assertThat(forEntity.getStatusCodeValue()).isEqualTo(200);
     }
 }
