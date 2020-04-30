@@ -53,6 +53,12 @@ test {
     useJUnitPlatform()
 }
 
+subprojects {
+    tasks.withType(Test) {
+        maxParallelForks = Runtime.runtime.availableProcessors()
+    }
+}
+
 processResources {
     filesMatching('application.yml') {
         filter {
