@@ -50,8 +50,8 @@ public class ParallelRequestsTest {
                 .toArray(CompletableFuture[]::new);
         CompletableFuture.allOf(futures).join();
 
-        long count = minuteEvents().getEventsCount();
-        assertThat(count).isEqualTo(100);
+        long eventsCount = minuteEvents().getEventsCount();
+        assertThat(eventsCount).isEqualTo(100);
     }
 
     private void handleEvent(String name) {
