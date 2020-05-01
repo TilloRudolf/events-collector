@@ -68,7 +68,7 @@ public class EventsController {
             @ApiResponse(responseCode = "200", description = "events count for current 24 hours",
                     content = @Content(schema = @Schema(implementation = EventsCount.class)))
     })
-    public EventsCount get24HoursEventsCount() {
-        return service.getCount(_24_HOURS_COLLECTION);
+    public EventsCount getDayEventsCount() {
+        return service.getCount(DAY_COLLECTION);
     }
 }

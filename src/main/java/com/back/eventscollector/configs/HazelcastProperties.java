@@ -9,10 +9,10 @@ public class HazelcastProperties {
 
     public static final Long MILLIS_IN_MINUTE = 1000 * 60L;
     public static final Long MILLIS_IN_HOUR = 1000 * 60 * 60L;
-    public static final Long MILLIS_IN_24_HOURS = 1000 * 60 * 60 * 24L;
+    public static final Long MILLIS_IN_DAY = 1000 * 60 * 60 * 24L;
     public static final String MINUTE_COLLECTION = "minute-collection";
     public static final String HOUR_COLLECTION = "hour-collection";
-    public static final String _24_HOURS_COLLECTION = "24-hours-collection";
+    public static final String DAY_COLLECTION = "24-hours-collection";
     public final static String TOO_OLD = "not handled, was more than day ago";
 
     private boolean readBackupData;

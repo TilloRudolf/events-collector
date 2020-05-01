@@ -78,7 +78,7 @@ public class HttpRequestsTest {
     }
 
     @Test
-    public void get24HoursShouldReturnOK() {
+    public void getDayShouldReturnOK() {
         ResponseEntity<EventsCount> forEntity = restTemplate.getForEntity("http://localhost:" + port + "/events/24hours", EventsCount.class);
         int statusCode = forEntity.getStatusCodeValue();
         assertThat(statusCode).isEqualTo(200);

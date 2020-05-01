@@ -40,7 +40,7 @@ public class CacheConfig {
                 .setMaxSizeConfig(new MaxSizeConfig()
                         .setSize(hazelcastProperties.getMaxCacheSize())
                         .setMaxSizePolicy(USED_HEAP_PERCENTAGE));
-        final MapConfig _24hoursEventsMapConfig = new MapConfig(_24_HOURS_COLLECTION)
+        final MapConfig dayEventsMapConfig = new MapConfig(DAY_COLLECTION)
                 .setReadBackupData(hazelcastProperties.isReadBackupData())
                 .setBackupCount(hazelcastProperties.getBackupCount())
                 .setMapEvictionPolicy(new LRUEvictionPolicy())
@@ -50,7 +50,7 @@ public class CacheConfig {
         hazelcastInstance.getConfig()
                 .addMapConfig(minuteEventsMapConfig)
                 .addMapConfig(hourEventsMapConfig)
-                .addMapConfig(_24hoursEventsMapConfig);
+                .addMapConfig(dayEventsMapConfig);
         return hazelcastInstance;
     }
 
