@@ -20,7 +20,7 @@ import static com.back.eventscollector.configs.HazelcastProperties.*;
 
 @RestController
 @RequestMapping("/events")
-@Tag(name = "events", description = "takes events and gets event count")
+@Tag(name = "events", description = "accepts events and provides events count")
 public class EventsController {
 
     private final EventService service;
@@ -35,7 +35,7 @@ public class EventsController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "event is successfully handled",
                     content = @Content(schema = @Schema(implementation = HandleEventResponse.class))),
-            @ApiResponse(responseCode = "400", description = "event isn't handled",
+            @ApiResponse(responseCode = "400", description = "event validation failed, wrong request body",
                     content = @Content(schema = @Schema(implementation = ExceptionSerialize.class)))
     })
     public HandleEventResponse handleEvent(@RequestBody @Valid Event event) {
