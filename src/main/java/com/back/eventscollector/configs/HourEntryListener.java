@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
 
+import static com.back.eventscollector.configs.CollectionName.DAY_COLLECTION;
 import static com.back.eventscollector.configs.TimeRange.MILLIS_IN_DAY;
 
 @Service
@@ -25,7 +26,7 @@ public class HourEntryListener implements EntryEvictedListener<Long, Event> {
 
     @PostConstruct
     public void init() {
-        dayEventsCollection = hazelcastInstance.getMap(CollectionName.DAY_COLLECTION.getName());
+        dayEventsCollection = hazelcastInstance.getMap(DAY_COLLECTION.getName());
     }
 
     @Override
