@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.back.eventscollector.configs.HazelcastProperties.*;
+import static com.back.eventscollector.configs.CollectionName.*;
+import static com.back.eventscollector.configs.TimeRange.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -17,9 +18,9 @@ public class EventServiceTest {
 
     @Test
     public void checkEvictionLogic() throws InterruptedException {
-        Event minuteEvent = new Event("name", "created 57 seconds before", System.currentTimeMillis() - (MILLIS_IN_MINUTE - 5 * 1000));
-        Event hourEvent = new Event("name", "created 59 minute 57 seconds before", System.currentTimeMillis() - (MILLIS_IN_HOUR - 5 * 1000));
-        Event dayEvent = new Event("name", "created 23 hours 59 minute 57 seconds before", System.currentTimeMillis() - (MILLIS_IN_DAY - 5 * 1000));
+        Event minuteEvent = new Event("name", "created 55 seconds before", System.currentTimeMillis() - (MILLIS_IN_MINUTE.getRange() - 5 * 1000));
+        Event hourEvent = new Event("name", "created 59 minute 55 seconds before", System.currentTimeMillis() - (MILLIS_IN_HOUR.getRange() - 5 * 1000));
+        Event dayEvent = new Event("name", "created 23 hours 59 minute 55 seconds before", System.currentTimeMillis() - (MILLIS_IN_DAY.getRange() - 5 * 1000));
 
         eventService.handleEvent(minuteEvent);
         eventService.handleEvent(hourEvent);

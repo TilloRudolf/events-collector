@@ -1,5 +1,6 @@
 package com.back.eventscollector.controller;
 
+import com.back.eventscollector.configs.CollectionName;
 import com.back.eventscollector.exception.ExceptionSerialize;
 import com.back.eventscollector.model.Event;
 import com.back.eventscollector.model.EventsCount;
@@ -11,8 +12,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 
-import static com.back.eventscollector.configs.HazelcastProperties.MINUTE_COLLECTION;
-import static com.back.eventscollector.configs.HazelcastProperties.TOO_OLD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -34,7 +33,7 @@ public class HttpRequestsTest {
         int codeValue = forEntity.getStatusCodeValue();
         assertThat(codeValue).isEqualTo(200);
         String collectionName = forEntity.getBody().getResult();
-        assertThat(collectionName).isEqualTo(MINUTE_COLLECTION);
+        assertThat(collectionName).isEqualTo(CollectionName.MINUTE_COLLECTION.getName());
     }
 
     @Test
@@ -60,7 +59,7 @@ public class HttpRequestsTest {
         int statusCode = forEntity.getStatusCodeValue();
         assertThat(statusCode).isEqualTo(200);
         String resultMessage = forEntity.getBody().getResult();
-        assertThat(resultMessage).isEqualTo(TOO_OLD);
+        assertThat(resultMessage).isEqualTo(CollectionName.TOO_OLD.getName());
     }
 
     @Test

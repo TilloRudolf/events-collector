@@ -15,7 +15,7 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static com.back.eventscollector.configs.HazelcastProperties.*;
+import static com.back.eventscollector.configs.CollectionName.*;
 import static com.hazelcast.config.MaxSizeConfig.MaxSizePolicy.USED_HEAP_PERCENTAGE;
 
 @Configuration
@@ -26,21 +26,21 @@ public class CacheConfig {
     @Bean(destroyMethod = "shutdown")
     public HazelcastInstance hazelcastInstance(final HazelcastProperties hazelcastProperties) {
         final HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(new Config());
-        final MapConfig minuteEventsMapConfig = new MapConfig(MINUTE_COLLECTION)
+        final MapConfig minuteEventsMapConfig = new MapConfig(MINUTE_COLLECTION.getName())
                 .setReadBackupData(hazelcastProperties.isReadBackupData())
                 .setBackupCount(hazelcastProperties.getBackupCount())
                 .setMapEvictionPolicy(new LRUEvictionPolicy())
                 .setMaxSizeConfig(new MaxSizeConfig()
                         .setSize(hazelcastProperties.getMaxCacheSize())
                         .setMaxSizePolicy(USED_HEAP_PERCENTAGE));
-        final MapConfig hourEventsMapConfig = new MapConfig(HOUR_COLLECTION)
+        final MapConfig hourEventsMapConfig = new MapConfig(HOUR_COLLECTION.getName())
                 .setReadBackupData(hazelcastProperties.isReadBackupData())
                 .setBackupCount(hazelcastProperties.getBackupCount())
                 .setMapEvictionPolicy(new LRUEvictionPolicy())
                 .setMaxSizeConfig(new MaxSizeConfig()
                         .setSize(hazelcastProperties.getMaxCacheSize())
                         .setMaxSizePolicy(USED_HEAP_PERCENTAGE));
-        final MapConfig dayEventsMapConfig = new MapConfig(DAY_COLLECTION)
+        final MapConfig dayEventsMapConfig = new MapConfig(DAY_COLLECTION.getName())
                 .setReadBackupData(hazelcastProperties.isReadBackupData())
                 .setBackupCount(hazelcastProperties.getBackupCount())
                 .setMapEvictionPolicy(new LRUEvictionPolicy())

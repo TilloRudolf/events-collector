@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static com.back.eventscollector.configs.HazelcastProperties.*;
+import static com.back.eventscollector.configs.CollectionName.*;
 
 @RestController
 @RequestMapping("/events")

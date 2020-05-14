@@ -1,5 +1,6 @@
 package com.back.eventscollector.service;
 
+import com.back.eventscollector.configs.CollectionName;
 import com.back.eventscollector.configs.HourEntryListener;
 import com.back.eventscollector.configs.MinuteEntryListener;
 import com.back.eventscollector.exception.TimeBreakingException;
@@ -15,7 +16,8 @@ import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.back.eventscollector.configs.HazelcastProperties.*;
+import static com.back.eventscollector.configs.CollectionName.*;
+import static com.back.eventscollector.configs.TimeRange.*;
 
 
 @Service
@@ -41,9 +43,9 @@ public class EventServiceImpl implements EventService {
 
     @PostConstruct
     public void init() {
-        minuteEventCollection = hazelcastInstance.getMap(MINUTE_COLLECTION);
-        hourEventCollection = hazelcastInstance.getMap(HOUR_COLLECTION);
-        dayEventCollection = hazelcastInstance.getMap(DAY_COLLECTION);
+        minuteEventCollection = hazelcastInstance.getMap(MINUTE_COLLECTION.getName());
+        hourEventCollection = hazelcastInstance.getMap(HOUR_COLLECTION.getName());
+        dayEventCollection = hazelcastInstance.getMap(DAY_COLLECTION.getName());
         minuteEventCollection.addLocalEntryListener(minuteEntryListener);
         hourEventCollection.addLocalEntryListener(hourEntryListener);
     }
@@ -54,20 +56,20 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventsCount getCount(String timeCollection) {
+    public EventsCount getCount(CollectionName timeCollection) {
         long count = 0;
         switch (timeCollection) {
             case MINUTE_COLLECTION:
-                count = hazelcastInstance.getMap(MINUTE_COLLECTION).size();
+                count = hazelcastInstance.getMap(MINUTE_COLLECTION.getName()).size();
                 break;
             case HOUR_COLLECTION:
-                count = hazelcastInstance.getMap(MINUTE_COLLECTION).size() +
-                        hazelcastInstance.getMap(HOUR_COLLECTION).size();
+                count = hazelcastInstance.getMap(MINUTE_COLLECTION.getName()).size() +
+                        hazelcastInstance.getMap(HOUR_COLLECTION.getName()).size();
                 break;
             case DAY_COLLECTION:
-                count = hazelcastInstance.getMap(MINUTE_COLLECTION).size() +
-                        hazelcastInstance.getMap(HOUR_COLLECTION).size() +
-                        hazelcastInstance.getMap(DAY_COLLECTION).size();
+                count = hazelcastInstance.getMap(MINUTE_COLLECTION.getName()).size() +
+                        hazelcastInstance.getMap(HOUR_COLLECTION.getName()).size() +
+                        hazelcastInstance.getMap(DAY_COLLECTION.getName()).size();
                 break;
         }
         return new EventsCount(count);
@@ -80,19 +82,19 @@ public class EventServiceImpl implements EventService {
             throw new TimeBreakingException(event);
         }
 
-        long ttlForMinute = MILLIS_IN_MINUTE - deltaTime;
-        long ttlForHour = MILLIS_IN_HOUR - deltaTime;
-        long ttlForDay = MILLIS_IN_DAY - deltaTime;
-        if (deltaTime < MILLIS_IN_MINUTE) {
+        long ttlForMinute = MILLIS_IN_MINUTE.getRange() - deltaTime;
+        long ttlForHour = MILLIS_IN_HOUR.getRange() - deltaTime;
+        long ttlForDay = MILLIS_IN_DAY.getRange() - deltaTime;
+        if (deltaTime < MILLIS_IN_MINUTE.getRange()) {
             minuteEventCollection.set(eventId.getAndIncrement(), event, ttlForMinute, TimeUnit.MILLISECONDS);
-            return MINUTE_COLLECTION;
-        } else if (deltaTime < MILLIS_IN_HOUR) {
+            return MINUTE_COLLECTION.getName();
+        } else if (deltaTime < MILLIS_IN_HOUR.getRange()) {
             hourEventCollection.set(eventId.getAndIncrement(), event, ttlForHour, TimeUnit.MILLISECONDS);
-            return HOUR_COLLECTION;
-        } else if (deltaTime < MILLIS_IN_DAY) {
+            return HOUR_COLLECTION.getName();
+        } else if (deltaTime < MILLIS_IN_DAY.getRange()) {
             dayEventCollection.set(eventId.getAndIncrement(), event, ttlForDay, TimeUnit.MILLISECONDS);
-            return DAY_COLLECTION;
+            return DAY_COLLECTION.getName();
         }
-        return TOO_OLD;
+        return TOO_OLD.getName();
     }
 }
