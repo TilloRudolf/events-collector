@@ -1,12 +1,33 @@
-plugins {
-    id 'org.springframework.boot' version '2.2.6.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'java'
+buildscript {
+    ext {
+        springBootVersion = '2.2.6.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
 }
 
-group = 'com.back'
-version = '0.0.1-SNAPSHOT'
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+
+group = 'com.back.eventscollector'
+mainClassName = "com.back.eventscollector.EventsCollectorApplication"
+version = project.hasProperty('projVersion') ? project.projVersion : '1.0.0'
 sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
 
 repositories {
     mavenCentral()
@@ -16,6 +37,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    //swagger
+    compile group: 'org.springdoc', name: 'springdoc-openapi-core', version: '1.1.49'
+    compile group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.3.2'
+
+    //cache
+    compile 'com.hazelcast:hazelcast-all:3.10.5'
+
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
@@ -23,4 +51,18 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+subprojects {
+    tasks.withType(Test) {
+        maxParallelForks = Runtime.runtime.availableProcessors()
+    }
+}
+
+processResources {
+    filesMatching('application.yml') {
+        filter {
+            it.replace('replacableVersionTag', project.version.toString())
+        }
+    }
 }

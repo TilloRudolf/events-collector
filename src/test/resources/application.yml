@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: ${APPLICATION_NAME:events-collector}
+    version: replacableVersionTag
+hazelcast:
+  maxCacheSize: 20
+  backupCount: 1
+  readBackupData: true

@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: ${APPLICATION_NAME:events-collector}
+    version: replacableVersionTag
+hazelcast:
+  maxCacheSize: 85
+  backupCount: 1
+  readBackupData: true
+---
+spring:
+  profiles: dev
